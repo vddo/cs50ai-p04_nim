@@ -1,4 +1,6 @@
 """
+v1.00 first completion
+v0.03 update_q_value() fixed
 v0.02 implemented all functions
 v0.01 get_q_value
 v0.00 origin
@@ -108,7 +110,7 @@ class NimAI():
         If no Q-value exists yet in `self.q`, return 0.
         """
         if (tuple(state), action) in self.q:
-            return self.q[(state, action)]
+            return self.q[(tuple(state), action)]
         else:
             return 0
 
@@ -130,7 +132,7 @@ class NimAI():
         new_value_estimate = reward + future_rewards
         new_q = old_q + self.alpha * (new_value_estimate - old_q)
 
-        return new_q
+        self.q[tuple(state), action] = new_q
     
     
     def best_future_reward(self, state):
@@ -150,10 +152,8 @@ class NimAI():
         else:
             dict_avail_actions = dict()
             for action in available_actions:
-                print(action)
                 q = self.get_q_value(state, action)
                 dict_avail_actions[(tuple(state), action)] = q
-            print(dict_avail_actions)
             return max(dict_avail_actions.values())
 
     def choose_action(self, state, epsilon=True):
